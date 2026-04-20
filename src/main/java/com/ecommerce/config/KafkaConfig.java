@@ -12,8 +12,6 @@ public class KafkaConfig {
 
     @Bean
     public DefaultErrorHandler errorHandler() {
-        return new DefaultErrorHandler((record, exception) -> {
-            log.error("failed message: {}", record.value(), exception);
-        }, new FixedBackOff(2000L, 3));
+        return new DefaultErrorHandler((record, exception) -> log.error("failed message: {}", record.value(), exception), new FixedBackOff(2000L, 3));
     }
 }

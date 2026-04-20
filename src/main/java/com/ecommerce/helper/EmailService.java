@@ -1,15 +1,14 @@
 package com.ecommerce.helper;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -17,64 +16,73 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
 
     @Async
-    public void sendOtp(String name, String email, Integer otp) throws MessagingException, UnsupportedEncodingException {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+    public void sendOtp(String name, String email, Integer otp) {
+        try {
+            String subject = "one time password for account creation";
 
-        mimeMessageHelper.setFrom("admin", "admin@ecommerce.com");
-        mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setSubject("one time password for account creation");
+            String text = "<html><body>"
+                    + "<h3>hello <b>" + name + "</b>,</h3>"
+                    + "<h3>your one time password is <b>" + otp + "</b></h3>"
+                    + "<h3>otp will be valid for only <b>5 minutes</b>.</h3>"
+                    + "</body></html>";
 
-        String text = "<html><body>"
-                + "<h3>hello <b>" + name + "</b>,</h3>"
-                + "<h3>your one time password is <b>" + otp + "</b></h3>"
-                + "<h3>otp will be valid for only <b>5 minutes</b>."
-                + "</body></html>";
+            sendEmail(email, subject, text);
 
-        mimeMessageHelper.setText(text, true);
-        javaMailSender.send(mimeMessage);
+        } catch (Exception e) {
+            log.error("failed to send OTP email to {}", email, e);
+        }
     }
 
     @Async
-    public void sendConfirmation(String name, String email, String password) throws MessagingException, UnsupportedEncodingException {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+    public void sendConfirmation(String name, String email, String password) {
+        try {
+            String subject = "registration successful";
 
-        mimeMessageHelper.setFrom("admin", "admin@ecommerce.com");
-        mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setSubject("registration successful");
+            String text = "<html><body>"
+                    + "<h3>hello <b>" + name + "</b>,</h3>"
+                    + "<h3>your account has been successfully registered.</h3>"
+                    + "<table>"
+                    + "<tr><td>email:</td><td><b>" + email + "</b></td></tr>"
+                    + "<tr><td>password:</td><td><b>" + password + "</b></td></tr>"
+                    + "</table>"
+                    + "</body></html>";
 
-        String text = "<html><body>"
-                + "<h3>hello <b>" + name + "</b>,</h3>"
-                + "<h3>your account has been successfully registered.</h3>"
-                + "<table>"
-                + "<tr><td>email:</td><td><b>" + email + "</b></td></tr>"
-                + "<tr><td>password:</td><td><b>" + password + "</b></td></tr>"
-                + "</table>"
-                + "</body></html>";
+            sendEmail(email, subject, text);
 
-        mimeMessageHelper.setText(text, true);
-        javaMailSender.send(mimeMessage);
+        } catch (Exception e) {
+            log.error("failed to send confirmation email to {}", email, e);
+        }
     }
 
     @Async
-    public void sendPaymentConfirmation(String email, Long orderId, Double amount) throws MessagingException, UnsupportedEncodingException {
+    public void sendPaymentConfirmation(String email, Long orderId, Double amount) {
+        try {
+            String subject = "payment successful";
+
+            String text = "<html><body>"
+                    + "<h3>payment successful</h3>"
+                    + "<table>"
+                    + "<tr><td>order id:</td><td><b>" + orderId + "</b></td></tr>"
+                    + "<tr><td>amount:</td><td><b>" + amount + "</b></td></tr>"
+                    + "</table>"
+                    + "</body></html>";
+
+            sendEmail(email, subject, text);
+
+        } catch (Exception e) {
+            log.error("failed to send payment email to {}", email, e);
+        }
+    }
+
+    private void sendEmail(String to, String subject, String htmlContent) throws Exception {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
-        mimeMessageHelper.setFrom("admin", "admin@ecommerce.com");
-        mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setSubject("payment successful");
+        mimeMessageHelper.setFrom("admin@ecommerce.com", "ecommerce app");
+        mimeMessageHelper.setTo(to);
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(htmlContent, true);
 
-        String text = "<html><body>"
-                + "<h3>payment successful</h3>"
-                + "<table>"
-                + "<tr><td>order id:</td><td><b>" + orderId + "</b></td></tr>"
-                + "<tr><td>amount:</td><td><b>" + amount + "</b></td></tr>"
-                + "</table>"
-                + "</body></html>";
-
-        mimeMessageHelper.setText(text, true);
         javaMailSender.send(mimeMessage);
     }
 }

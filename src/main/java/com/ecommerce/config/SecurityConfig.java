@@ -29,7 +29,7 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
-    private final String[] swagger = {"/swagger-ui.html", "/swagger-ui", "/", "api-docs", "/web-jars"};
+    private final String[] swagger = {"/swagger-ui.html", "/swagger-ui", "/", "/api-docs", "/web-jars"};
 
     @Bean
     SecureRandom secureRandom() {

@@ -1,6 +1,5 @@
 package com.ecommerce.kafka.producer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ecommerce.kafka.event.PaymentEvent;
 import lombok.RequiredArgsConstructor;
@@ -16,14 +15,18 @@ public class ProducerService {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
-    public void sendPaymentEvent(PaymentEvent paymentEvent) throws JsonProcessingException {
-        String message = objectMapper.writeValueAsString(paymentEvent);
-        kafkaTemplate.send("payment-success", message).whenComplete((result, exception) -> {
-            if (exception == null) {
-                log.info("kafka sent: {}", message);
-            } else {
-                log.error("kafka send failed: {}", message, exception);
-            }
-        });
+    public void sendPaymentEvent(PaymentEvent paymentEvent) {
+        try {
+            String message = objectMapper.writeValueAsString(paymentEvent);
+            kafkaTemplate.send("payment-success", message).whenComplete((result, exception) -> {
+                if (exception == null) {
+                    log.info("kafka sent: {}", message);
+                } else {
+                    log.error("kafka send failed: {}", message, exception);
+                }
+            });
+        } catch (Exception e) {
+            log.error("failed to serialize payment event: {}", paymentEvent, e);
+        }
     }
 }
