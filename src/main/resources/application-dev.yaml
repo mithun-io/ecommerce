@@ -21,3 +21,7 @@ admin:
   email: ${ADMIN_EMAIL}
   mobile: ${ADMIN_MOBILE}
   password: ${ADMIN_PASSWORD}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}

@@ -1,0 +1,21 @@
+package com.ecommerce.helper;
+
+import com.ecommerce.entity.User;
+import com.ecommerce.exception.NoResourceFoundException;
+import com.ecommerce.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+@RequiredArgsConstructor
+public class CustomUserDetailsService implements UserDetailsService {
+
+    private final UserRepository userRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new NoResourceFoundException("user not found"));
+        return new CustomUserDetails(user);
+    }
+}
