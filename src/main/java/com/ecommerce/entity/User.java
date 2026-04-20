@@ -1,5 +1,6 @@
 package com.ecommerce.entity;
 
+import com.ecommerce.enums.Gender;
 import com.ecommerce.enums.UserRole;
 import com.ecommerce.enums.UserStatus;
 import jakarta.persistence.*;
@@ -33,6 +34,9 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;

@@ -1,6 +1,7 @@
 package com.ecommerce.helper;
 
 import com.ecommerce.entity.User;
+import com.ecommerce.enums.Gender;
 import com.ecommerce.enums.UserRole;
 import com.ecommerce.enums.UserStatus;
 import com.ecommerce.repository.UserRepository;
@@ -42,6 +43,7 @@ public class AdminInitializer implements CommandLineRunner {
                     .mobile(adminMobile)
                     .password(passwordEncoder.encode(adminPassword))
                     .email(adminEmail)
+                    .gender(Gender.MALE)
                     .userRole(UserRole.ADMIN)
                     .userStatus(UserStatus.ACTIVE)
                     .createdAt(LocalDateTime.now())
