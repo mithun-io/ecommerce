@@ -11,7 +11,7 @@ import org.springframework.util.backoff.FixedBackOff;
 public class KafkaConfig {
 
     @Bean
-    public DefaultErrorHandler errorHandler() {
+    public DefaultErrorHandler defaultErrorHandler() {
         return new DefaultErrorHandler((record, exception) -> log.error("failed message: {}", record.value(), exception), new FixedBackOff(2000L, 3));
     }
 }
