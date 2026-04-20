@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +30,11 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     private final String[] swagger = {"/swagger-ui.html", "/swagger-ui", "/", "api-docs", "/web-jars"};
+
+    @Bean
+    SecureRandom secureRandom() {
+        return new SecureRandom();
+    }
 
     @Bean
     PasswordEncoder passwordEncoder() {
