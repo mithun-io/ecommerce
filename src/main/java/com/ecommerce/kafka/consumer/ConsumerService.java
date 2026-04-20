@@ -1,9 +1,9 @@
-package com.kafka.consumer;
+package com.ecommerce.kafka.consumer;
 
 import com.ecommerce.helper.EmailService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kafka.event.PaymentEvent;
+import com.ecommerce.kafka.event.PaymentEvent;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
