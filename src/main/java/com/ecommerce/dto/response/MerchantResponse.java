@@ -1,0 +1,33 @@
+package com.ecommerce.dto.response;
+
+import com.ecommerce.entity.User;
+import com.ecommerce.enums.UserStatus;
+
+import java.time.LocalDateTime;
+
+public class MerchantResponse {
+
+    private Long id;
+
+    private String businessName;
+
+    private String ownerName;
+
+    private String businessEmail;
+
+    private String businessMobile;
+
+    private String businessAddress;
+
+    private String gstNumber;
+
+    private String panNumber;
+
+    private String businessLicense;
+
+    private UserStatus merchantStatus;
+
+    private LocalDateTime createdAt;
+
+    private User user;
+}
