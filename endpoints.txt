@@ -1,0 +1,29 @@
+admin login
+POST: localhost:80/api/auth/login
+
+{
+    "email" : "admin@ecommerce.com",
+    "password" : "Qw3!@sPe:E1"
+}
+
+response
+{
+    "success": true,
+    "message": "login successful",
+    "data": {
+        "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlY29tbWVyY2UuY29tIiwicm9sZSI6IlJPTEU6QURNSU4iLCJpYXQiOjE3NzY4Njc1ODAsImV4cCI6MTc3Njg3NTk4MH0.pf-_YJK_6Sy9Hv7V035KvXzcn3P2o076LhMnGMy6Tyni10mjNvNoe07sFRn56wfNyYf2eobGxLxgFe8xTxoRAw",
+        "userResponse": {
+            "address": "bangalore",
+            "createdAt": "2026-04-22 17:58 PM",
+            "dateOfBirth": "2005-06-14",
+            "email": "admin@ecommerce.com",
+            "gender": "MALE",
+            "id": 2,
+            "mobile": "0",
+            "userRole": "ADMIN",
+            "userStatus": "ACTIVE",
+            "username": "admin"
+        }
+    },
+    "httpStatus": 200
+}
