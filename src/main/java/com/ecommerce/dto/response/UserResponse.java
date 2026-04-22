@@ -3,6 +3,7 @@ package com.ecommerce.dto.response;
 import com.ecommerce.enums.Gender;
 import com.ecommerce.enums.UserRole;
 import com.ecommerce.enums.UserStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -29,5 +30,6 @@ public class UserResponse {
 
     private UserStatus userStatus;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm a")
     private LocalDateTime createdAt;
 }
