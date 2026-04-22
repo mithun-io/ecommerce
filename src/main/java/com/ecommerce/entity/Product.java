@@ -1,5 +1,6 @@
 package com.ecommerce.entity;
 
+import com.ecommerce.enums.ProductStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -47,7 +48,7 @@ public class Product {
     private Long stock;
 
     @Column(nullable = false)
-    private Boolean approved;
+    private ProductStatus productStatus;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "merchant_id")

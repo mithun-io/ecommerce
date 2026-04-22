@@ -1,5 +1,6 @@
 package com.ecommerce.dto.response;
 
+import com.ecommerce.enums.ProductStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class ProductResponse {
 
     private String thumbnail;
 
-    private Boolean approved;
+    private ProductStatus productStatus;
 
     private Long stock;
 
