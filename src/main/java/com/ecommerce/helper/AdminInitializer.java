@@ -12,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -44,6 +45,8 @@ public class AdminInitializer implements CommandLineRunner {
                     .password(passwordEncoder.encode(adminPassword))
                     .email(adminEmail)
                     .gender(Gender.MALE)
+                    .address("bangalore")
+                    .dateOfBirth(LocalDate.parse("2005-06-14"))
                     .userRole(UserRole.ADMIN)
                     .userStatus(UserStatus.ACTIVE)
                     .createdAt(LocalDateTime.now())

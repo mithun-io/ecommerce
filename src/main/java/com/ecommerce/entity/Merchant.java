@@ -24,30 +24,16 @@ public class Merchant {
     @Column(nullable = false)
     private String businessName;
 
-    @Column(nullable = false)
-    private String ownerName;
-
-    @Column(nullable = false, unique = true)
-    private String businessEmail;
-
-    @Column(nullable = false, unique = true)
-    private String businessMobile;
-
-    @Column(nullable = false)
-    private String businessAddress;
-
     private String gstNumber;
 
     private String panNumber;
 
     private String businessLicense;
 
-    @Enumerated(EnumType.STRING)
-    private UserStatus merchantStatus;
-
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 }

@@ -27,30 +27,46 @@ public class RedisService {
         return (Integer) redisTemplate.opsForValue().get(OTP_PREFIX + email);
     }
 
-    public CustomerRequest getPendingCustomer(String email) throws JsonProcessingException {
-        String json = (String) redisTemplate.opsForValue().get(PENDING_CUSTOMER_PREFIX + email);
-        if (json == null) return null;
-        return objectMapper.readValue(json, CustomerRequest.class);
+    public CustomerRequest getPendingCustomer(String email) {
+        try {
+            String json = (String) redisTemplate.opsForValue().get(PENDING_CUSTOMER_PREFIX + email);
+            if (json == null) return null;
+            return objectMapper.readValue(json, CustomerRequest.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("error while parsing customer json from redis", e);
+        }
     }
 
-    public MerchantRequest getPendingMerchant(String email) throws JsonProcessingException {
-        String json = (String) redisTemplate.opsForValue().get(PENDING_MERCHANT_PREFIX + email);
-        if (json == null) return null;
-        return objectMapper.readValue(json, MerchantRequest.class);
+    public MerchantRequest getPendingMerchant(String email) {
+        try {
+            String json = (String) redisTemplate.opsForValue().get(PENDING_MERCHANT_PREFIX + email);
+            if (json == null) return null;
+            return objectMapper.readValue(json, MerchantRequest.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("error while parsing customer json from redis", e);
+        }
     }
 
     public void storeOtp(String email, Integer otp) {
         redisTemplate.opsForValue().set(OTP_PREFIX + email, otp, Duration.ofMinutes(5));
     }
 
-    public void storePendingCustomer(String email, CustomerRequest customerRequest) throws JsonProcessingException {
-        String json = objectMapper.writeValueAsString(customerRequest);
-        redisTemplate.opsForValue().set(PENDING_CUSTOMER_PREFIX + email, json, Duration.ofMinutes(5));
+    public void storePendingCustomer(String email, CustomerRequest customerRequest) {
+        try {
+            String json = objectMapper.writeValueAsString(customerRequest);
+            redisTemplate.opsForValue().set(PENDING_CUSTOMER_PREFIX + email, json, Duration.ofMinutes(5));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("error while parsing customer json from redis", e);
+        }
     }
 
-    public void storePendingMerchant(String email, MerchantRequest merchantRequest) throws JsonProcessingException {
-        String json = objectMapper.writeValueAsString(merchantRequest);
-        redisTemplate.opsForValue().set(PENDING_MERCHANT_PREFIX + email, json, Duration.ofMinutes(5));
+    public void storePendingMerchant(String email, MerchantRequest merchantRequest) {
+        try {
+            String json = objectMapper.writeValueAsString(merchantRequest);
+            redisTemplate.opsForValue().set(PENDING_MERCHANT_PREFIX + email, json, Duration.ofMinutes(5));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("error while parsing customer json from redis", e);
+        }
     }
 
     public void deleteOtp(String email) {
@@ -65,11 +81,11 @@ public class RedisService {
         redisTemplate.delete(PENDING_MERCHANT_PREFIX + email);
     }
 
-    public boolean isPendingCustomerExists(String email) throws JsonProcessingException {
+    public boolean isPendingCustomerExists(String email) {
         return getPendingCustomer(email) != null;
     }
 
-    public boolean isPendingMerchantExists(String email) throws JsonProcessingException {
+    public boolean isPendingMerchantExists(String email) {
         return getPendingMerchant(email) != null;
     }
 }

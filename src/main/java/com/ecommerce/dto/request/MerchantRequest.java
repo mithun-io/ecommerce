@@ -1,7 +1,10 @@
 package com.ecommerce.dto.request;
 
+import com.ecommerce.enums.Gender;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 public class MerchantRequest {
@@ -22,6 +25,17 @@ public class MerchantRequest {
 
     @NotBlank(message = "business address is required")
     private String businessAddress;
+
+    @NotBlank(message = "password is required")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "password must be at least 8 characters and include uppercase, lowercase, number and special character")
+    private String password;
+
+    @NotNull(message = "gender is required")
+    private Gender gender;
+
+    @NotNull(message = "date of birth is required")
+    @Past(message = "date of birth must be past")
+    private LocalDate dateOfBirth;
 
     @NotBlank(message = "gst number is required")
     private String gstNumber;

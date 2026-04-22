@@ -25,37 +25,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String customerName;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false, unique = true)
-    private String mobile;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
-    @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dateOfBirth;
-
-    @Column(nullable = false)
-    private String address;
-
-    @Enumerated(EnumType.STRING)
-    private UserRole customerRole;
-
-    @Enumerated(EnumType.STRING)
-    private UserStatus customerStatus;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
     @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 }

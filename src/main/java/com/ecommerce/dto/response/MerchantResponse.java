@@ -1,8 +1,10 @@
 package com.ecommerce.dto.response;
 
 import com.ecommerce.entity.User;
+import com.ecommerce.enums.Gender;
 import com.ecommerce.enums.UserStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class MerchantResponse {
@@ -18,6 +20,10 @@ public class MerchantResponse {
     private String businessMobile;
 
     private String businessAddress;
+
+    private Gender gender;
+
+    private LocalDate dateOfBirth;
 
     private String gstNumber;
 

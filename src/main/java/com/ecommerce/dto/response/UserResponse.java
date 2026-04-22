@@ -4,6 +4,7 @@ import com.ecommerce.enums.Gender;
 import com.ecommerce.enums.UserRole;
 import com.ecommerce.enums.UserStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class UserResponse {
@@ -15,6 +16,10 @@ public class UserResponse {
     private String email;
 
     private String mobile;
+
+    private LocalDate dateOfBirth;
+
+    private String address;
 
     private Gender gender;
 
