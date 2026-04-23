@@ -3,6 +3,7 @@ package com.ecommerce.service.impl;
 import com.ecommerce.dto.response.*;
 import com.ecommerce.entity.*;
 import com.ecommerce.enums.PaymentStatus;
+import com.ecommerce.enums.ProductStatus;
 import com.ecommerce.exception.NoResourceFoundException;
 import com.ecommerce.exception.OutOfStockException;
 import com.ecommerce.mapper.CartItemMapper;
@@ -52,7 +53,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final OrdersMapper ordersMapper;
 
     private Customer getCustomer(String email) {
-        return customerRepository.findByEmail(email).orElseThrow(() -> new NoResourceFoundException("user not found!"));
+        return customerRepository.findByUserEmail(email).orElseThrow(() -> new NoResourceFoundException("user not found!"));
     }
 
     private Product getProduct(Long id) {
@@ -67,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         Page<Product> products;
         if (name == null && category == null && lowerRange == null && higherRange == null) {
-            products = productRepository.findByApprovedTrue(pageable);
+            products = productRepository.findByProductStatus(ProductStatus.APPROVED, pageable);
         } else if (lowerRange != null && higherRange != null) {
             products = productRepository.findByPriceBetween(Double.parseDouble(lowerRange), Double.parseDouble(higherRange), pageable);
         } else if (name != null && category != null) {

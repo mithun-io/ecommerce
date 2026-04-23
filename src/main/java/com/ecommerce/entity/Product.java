@@ -48,6 +48,7 @@ public class Product {
     private Long stock;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
     @ManyToOne(fetch = FetchType.EAGER)

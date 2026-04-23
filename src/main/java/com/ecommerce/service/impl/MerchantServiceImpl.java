@@ -33,9 +33,13 @@ public class MerchantServiceImpl implements MerchantService {
     private final RestClient restClient;
     // private final RestTemplate restTemplate;
 
+    private Merchant getMerchant(String email) {
+        return merchantRepository.findByUserEmail(email).orElseThrow(() -> new NoResourceFoundException("user not found"));
+    }
+
     @Override
     public List<ProductResponse> addProducts(String email) {
-        Merchant merchant = merchantRepository.findByEmail(email).orElseThrow(() -> new NoResourceFoundException("no merchants found"));
+        Merchant merchant = getMerchant(email);
         DummyJsonResponse dummyJsonProductResponse = restClient.get()
                 .uri("https://dummyjson.com/products")
                 .retrieve()
@@ -63,7 +67,7 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public ProductResponse saveProduct(ProductRequest productRequest, String email) {
-        Merchant merchant = merchantRepository.findByEmail(email).orElseThrow(() -> new NoResourceFoundException("No merchant found"));
+        Merchant merchant = getMerchant(email);
 
         Product product = Product.builder()
                 .name(productRequest.getTitle())
@@ -83,7 +87,7 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public List<ProductResponse> getProducts(String email) {
-        Merchant merchant = merchantRepository.findByEmail(email).orElseThrow(() -> new NoResourceFoundException("no merchant found"));
+        Merchant merchant = getMerchant(email);
         List<Product> products = productRepository.findByMerchant(merchant);
         if (products.isEmpty()) throw new NoResourceFoundException("no products found");
         return products.stream().map(this::mapToResponse).toList();
@@ -91,7 +95,7 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public ProductResponse updateProduct(Long id, ProductRequest productRequest, String email) {
-        Merchant merchant = merchantRepository.findByEmail(email).orElseThrow(() -> new NoResourceFoundException("no merchant found"));
+        Merchant merchant = getMerchant(email);
         Product product = productRepository.findByIdAndMerchant(id, merchant).orElseThrow(() -> new NoResourceFoundException("product not found"));
 
         product.setName(productRequest.getTitle());
@@ -109,7 +113,7 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public void deleteProduct(Long id, String email) {
-        Merchant merchant = merchantRepository.findByEmail(email).orElseThrow(() -> new NoResourceFoundException("no merchant found"));
+        Merchant merchant = getMerchant(email);
         Product product = productRepository.findByIdAndMerchant(id, merchant).orElseThrow(() -> new NoResourceFoundException("product not found"));
         productRepository.delete(product);
     }
