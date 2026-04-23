@@ -255,7 +255,7 @@ public class AuthServiceImpl implements AuthService {
     public void passwordReset(PasswordResetRequest passwordResetRequest) {
         User user = userRepository.findByEmail(passwordResetRequest.getEmail()).orElseThrow(() -> new NoResourceFoundException("user not found"));
 
-        Integer storedOtp = redisService.getOtp(passwordResetRequest.getOtp());
+        Integer storedOtp = redisService.getOtp(passwordResetRequest.getEmail());
         if (storedOtp == null) {
             throw new BadRequestException("otp expired or invalid");
         }

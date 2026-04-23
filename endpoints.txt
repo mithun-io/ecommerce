@@ -149,3 +149,57 @@ response
     "data": null,
     "httpStatus": 200
 }
+
+logged in user password change
+PATCH: localhost:8081/api/auth/password-change
+body/raw/json
+{
+    "previousPassword" : "EQL#!sbd1aAd",
+    "newPassword" : "SD:&@#DAsdw1"
+}
+
+response
+{
+    "success": true,
+    "message": "password changed successfully",
+    "data": {
+        "address": "california",
+        "createdAt": "2026-04-23 17:27 PM",
+        "dateOfBirth": "1998-04-12",
+        "email": "uvzug73579@minitts.net",
+        "gender": "MALE",
+        "id": 9,
+        "mobile": "9876543230",
+        "userRole": "MERCHANT",
+        "userStatus": "ACTIVE",
+        "username": "uvzug"
+    },
+    "httpStatus": 200
+}
+
+forget password
+PATCH: localhost:8081/api/auth/forget-password/uvzug73579@minitts.net
+response
+{
+    "success": true,
+    "message": "otp sent successfully, verify to reset password",
+    "data": null,
+    "httpStatus": 200
+}
+
+reset password
+PATCH: localhost:8081/api/auth/password-reset
+body/raw/json
+{
+    "email" : "uvzug73579@minitts.net",
+    "otp" : "236981",
+    "newPassword" : "SDh129!@ds19"
+}
+
+response
+{
+    "success": true,
+    "message": "password reset successful",
+    "data": null,
+    "httpStatus": 200
+}
