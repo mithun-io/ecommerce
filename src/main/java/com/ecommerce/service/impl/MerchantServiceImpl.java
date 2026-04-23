@@ -8,6 +8,8 @@ import com.ecommerce.enums.ProductStatus;
 import com.ecommerce.exception.NoResourceFoundException;
 import com.ecommerce.entity.Merchant;
 import com.ecommerce.entity.Product;
+import com.ecommerce.kafka.event.ProductEvent;
+import com.ecommerce.kafka.producer.ProducerService;
 import com.ecommerce.repository.MerchantRepository;
 import com.ecommerce.repository.ProductRepository;
 import com.ecommerce.service.MerchantService;
@@ -33,6 +35,8 @@ public class MerchantServiceImpl implements MerchantService {
 
     private final RestClient restClient;
     // private final RestTemplate restTemplate;
+
+    private final ProducerService producerService;
 
     private Merchant getMerchant(String email) {
         return merchantRepository.findByUserEmail(email).orElseThrow(() -> new NoResourceFoundException("user not found"));
@@ -84,8 +88,21 @@ public class MerchantServiceImpl implements MerchantService {
                 .productStatus(ProductStatus.PENDING)
                 .merchant(merchant)
                 .build();
-        Product savedProducts = productRepository.save(product);
-        return mapToResponse(savedProducts);
+        Product savedProduct = productRepository.save(product);
+
+        ProductEvent productEvent = ProductEvent.builder()
+                .eventType("PRODUCT_CREATED")
+                .productId(savedProduct.getId())
+                .merchantId(merchant.getId())
+                .title(savedProduct.getName())
+                .price(savedProduct.getPrice())
+                .status(savedProduct.getProductStatus().name())
+                .timestamp(java.time.LocalDateTime.now().toString())
+                .build();
+
+        producerService.sendProductEvent(productEvent);
+
+        return mapToResponse(savedProduct);
     }
 
     @Transactional

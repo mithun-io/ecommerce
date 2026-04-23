@@ -33,18 +33,17 @@ public class CustomerController {
     @PostMapping("/add-product/cart/{id}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ApiResponse<CartResponse>> addToCart(@PathVariable() Long id,
-                                                               @RequestParam String email,
-                                                               @RequestParam String size,
-                                                               @RequestParam Double price) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "product added to cart", customerService.addToCart(id, email, size, price), 200));
+                                                               Principal principal,
+                                                               @RequestParam String size) {
+        return ResponseEntity.ok(new ApiResponse<>(true, "product added to cart", customerService.addToCart(id, principal.getName(), size), 200));
     }
 
     @DeleteMapping("/remove-product/cart/{productId}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ApiResponse<CartResponse>> removeFromCart(@PathVariable Long productId,
-                                                                    @RequestParam String email,
+                                                                    Principal principal,
                                                                     @RequestParam String size) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "product removed from cart", customerService.removeFromCart(productId, email, size), 200));
+        return ResponseEntity.ok(new ApiResponse<>(true, "product removed from cart", customerService.removeFromCart(productId, principal.getName(), size), 200));
     }
 
     @GetMapping("/cart/items")
@@ -55,8 +54,8 @@ public class CustomerController {
 
     @PostMapping("/cart/buy")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ApiResponse<PaymentResponse>> buyFromCart(Principal principal, @RequestParam String email) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "order created successfully, please confirm the payment", customerService.buyFromCart(principal.getName(), email), 200));
+    public ResponseEntity<ApiResponse<PaymentResponse>> buyFromCart(Principal principal, @RequestParam String address) {
+        return ResponseEntity.ok(new ApiResponse<>(true, "order created successfully, please confirm the payment", customerService.buyFromCart(principal.getName(), address), 200));
     }
 
     @PostMapping("/payment/confirm/{orderId}")

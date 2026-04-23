@@ -1,5 +1,6 @@
 package com.ecommerce.kafka.producer;
 
+import com.ecommerce.kafka.event.ProductEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ecommerce.kafka.event.PaymentEvent;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,16 @@ public class ProducerService {
             });
         } catch (Exception e) {
             log.error("failed to serialize payment event: {}", paymentEvent, e);
+        }
+    }
+
+    public void sendProductEvent(ProductEvent event) {
+        try {
+            String message = objectMapper.writeValueAsString(event);
+            kafkaTemplate.send("product-topic", message);
+            log.info("product event sent: {}", message);
+        } catch (Exception e) {
+            log.error("failed to send product event", e);
         }
     }
 }

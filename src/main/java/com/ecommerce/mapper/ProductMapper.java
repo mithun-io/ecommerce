@@ -14,6 +14,7 @@ public interface ProductMapper {
     Product toProduct(ProductRequest productRequest);
 
     @Mapping(target = "merchantId", expression = "java(product.getMerchant().getId())")
+    @Mapping(target = "title", expression = "java(product.getName())")
     ProductResponse toProductResponse(Product product);
 
     List<ProductResponse> toProductResponses(List<Product> products);

@@ -6,6 +6,8 @@ import com.ecommerce.enums.PaymentStatus;
 import com.ecommerce.enums.ProductStatus;
 import com.ecommerce.exception.NoResourceFoundException;
 import com.ecommerce.exception.OutOfStockException;
+import com.ecommerce.kafka.event.PaymentEvent;
+import com.ecommerce.kafka.producer.ProducerService;
 import com.ecommerce.mapper.CartItemMapper;
 import com.ecommerce.mapper.CartMapper;
 import com.ecommerce.mapper.OrdersMapper;
@@ -52,6 +54,8 @@ public class CustomerServiceImpl implements CustomerService {
     private final CartItemMapper cartItemMapper;
     private final OrdersMapper ordersMapper;
 
+    private final ProducerService producerService;
+
     private Customer getCustomer(String email) {
         return customerRepository.findByUserEmail(email).orElseThrow(() -> new NoResourceFoundException("user not found!"));
     }
@@ -88,7 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public CartResponse addToCart(Long id, String email, String size, Double price) {
+    public CartResponse addToCart(Long id, String email, String size) {
         Product product = getProduct(id);
         Customer customer = getCustomer(email);
 
@@ -99,6 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
         Cart cart = customer.getCart();
         if (cart == null) {
             cart = new Cart();
+            cart.setCustomer(customer);
             customer.setCart(cart);
         }
 
@@ -124,6 +129,7 @@ public class CustomerServiceImpl implements CustomerService {
                     .price(product.getPrice())
                     .product(product)
                     .build();
+            cartItems.add(cartItem);
         }
 
         product.setStock(product.getStock() - 1);
@@ -186,7 +192,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         List<CartItem> cartItems = cart.getCartItems();
-        double amount = cartItems.stream().mapToDouble(x -> x.getQuantity() * x.getPrice()).sum();
+        double amount = cartItems.stream().mapToDouble(x -> x.getQuantity() * x.getProduct().getPrice()).sum();
         String orderId;
 
         try {
@@ -247,6 +253,21 @@ public class CustomerServiceImpl implements CustomerService {
         ordersRepository.save(orders);
 
         Customer customer = orders.getCustomer();
+
+        PaymentEvent event = PaymentEvent.builder()
+                .eventType("PAYMENT_SUCCESS")
+                .orderId(orders.getId()) // DB id (Long)
+                .userId(customer.getId())
+                .email(customer.getUser().getEmail())
+                .amount(orders.getAmount())
+                .paymentStatus("SUCCESS")
+                .paymentMethod("RAZORPAY")
+                .transactionId(razorpayId)
+                .timestamp(java.time.LocalDateTime.now().toString())
+                .build();
+
+        producerService.sendPaymentEvent(event);
+
         return PaymentResponse.builder()
                 .name(customer.getUser().getUsername())
                 .email(customer.getUser().getEmail())

@@ -433,3 +433,15 @@ GET: localhost:8081/api/admin/customers
 GET: localhost:8081/api/admin/merchants
 
 GET: localhost:8081/api/admin/products
+
+customer controller
+
+create a docker-compose file for kafka and,
+PS C:\Users\IdeaProjects\ecommerce> docker-compose up -d
+[+] up 16/17
+ ✔ Image confluentinc/cp-zookeeper:7.4.4 Pulled                                                                                                                                                                                                                28.3s
+ ✔ Image confluentinc/cp-kafka:7.4.4     Pulled                                                                                                                                                                                                                28.3s
+ ✔ Network ecommerce_default             Created                                                                                                                                                                                                               0.1s
+ ✔ Container ecommerce-zookeeper-1       Started                                                                                                                                                                                                               1.0s
+ ✔ Container ecommerce-kafka-1           Started
+
