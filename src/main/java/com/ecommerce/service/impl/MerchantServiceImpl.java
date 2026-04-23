@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class MerchantServiceImpl implements MerchantService {
         return merchantRepository.findByUserEmail(email).orElseThrow(() -> new NoResourceFoundException("user not found"));
     }
 
+    @Transactional
     @Override
     public List<ProductResponse> addProducts(String email) {
         Merchant merchant = getMerchant(email);
@@ -65,6 +67,7 @@ public class MerchantServiceImpl implements MerchantService {
         return savedProducts.stream().map(this::mapToResponse).toList();
     }
 
+    @Transactional
     @Override
     public ProductResponse saveProduct(ProductRequest productRequest, String email) {
         Merchant merchant = getMerchant(email);
@@ -85,6 +88,7 @@ public class MerchantServiceImpl implements MerchantService {
         return mapToResponse(savedProducts);
     }
 
+    @Transactional
     @Override
     public List<ProductResponse> getProducts(String email) {
         Merchant merchant = getMerchant(email);
@@ -93,6 +97,7 @@ public class MerchantServiceImpl implements MerchantService {
         return products.stream().map(this::mapToResponse).toList();
     }
 
+    @Transactional
     @Override
     public ProductResponse updateProduct(Long id, ProductRequest productRequest, String email) {
         Merchant merchant = getMerchant(email);
@@ -111,6 +116,7 @@ public class MerchantServiceImpl implements MerchantService {
         return mapToResponse(updatedProducts);
     }
 
+    @Transactional
     @Override
     public void deleteProduct(Long id, String email) {
         Merchant merchant = getMerchant(email);
@@ -118,6 +124,7 @@ public class MerchantServiceImpl implements MerchantService {
         productRepository.delete(product);
     }
 
+    @Transactional
     @Override
     public ProductResponse mapToResponse(Product product) {
         return ProductResponse.builder()
