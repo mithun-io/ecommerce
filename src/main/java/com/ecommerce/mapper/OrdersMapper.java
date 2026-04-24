@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {CartItemMapper.class})
 public interface OrdersMapper {
 
     Orders toOrder(OrdersRequest orderRequest);
