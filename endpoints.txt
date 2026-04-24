@@ -446,3 +446,263 @@ PS C:\Users\IdeaProjects\ecommerce> docker-compose up -d
  ✔ Container ecommerce-zookeeper-1       Started                                                                                                                                                                                                               1.0s
  ✔ Container ecommerce-kafka-1           Started
 
+process of customer
+login admin
+{
+    "email" : "alexanra.astin@allfreemail.net",
+    "password" : "Qw3!@sPe:E1"
+}
+
+register customer
+POST: localhost:8081/api/auth/customer/register
+body/raw/json
+ {
+  "name": "yggro304",
+  "email": "kaithlynn.greenlaw@allfreemail.net",
+  "mobile": "9866543219",
+  "password": "Qw#12345a",
+  "gender": "MALE",
+  "dateOfBirth": "2000-01-01",
+  "address": "Bangalore"
+}
+
+verify
+PATCH: localhost:8081/api/auth/customer/verify
+{
+    "email": "kaithlynn.greenlaw@allfreemail.net",
+    "otp" : "362943"
+}
+
+login
+POST: localhost:8081/api/auth/login
+{
+  "email": "kaithlynn.greenlaw@allfreemail.net",
+  "password": "Qw#12345a"
+}
+
+register the merchant as well
+POST: localhost:8081/api/auth/merchant/register
+body/raw/json
+{
+  "businessName": "ella",
+  "ownerName": "ella",
+  "businessEmail": "lbeif09022@minitts.net",
+  "businessMobile": "9872541320",
+  "businessAddress": "Bangalore",
+  "password": "Qw#12345a",
+  "gender": "MALE",
+  "dateOfBirth": "1999-05-10",
+  "gstNumber": "29ABCDE2234F1Z5",
+  "panNumber": "ABCDE1224F",
+  "businessLicense": "LIC223456"
+}
+
+verify
+PATCH: localhost:8081/api/auth/merchant/verify
+{
+  "email": "lbeif09022@minitts.net",
+   "otp" : "882271"
+}
+
+login the merchant
+POST: localhost:8081/api/auth/login
+{
+  "email": "lbeif09022@minitts.net",
+    "password": "Qw#12345a"
+}
+
+merchant adds the product
+POST: localhost:8081/api/merchant/product?email=lbeif09022@minitts.net
+
+response
+{
+    "success": true,
+    "message": "product saved successfully",
+    "data": {
+        "brand": "test brand",
+        "category": "beauty",
+        "id": 37,
+        "merchantId": 3,
+        "price": 599.0,
+        "productStatus": "PENDING",
+        "rating": 4.8,
+        "stock": 10,
+        "tags": [
+            "beauty"
+        ],
+        "thumbnail": "https://example.com/img.jpg",
+        "title": "voilet lipstick"
+    },
+    "httpStatus": 200
+}
+
+email will be sent to admin mail to approve the product, if product is approved mail will be sent to merchant
+
+login as admin using bearer token and approve the product or deny
+PATCH: localhost:8081/api/admin/approve/product/37
+
+now login as customer using bearer token and get the products
+GET: localhost:8081/api/customer/products
+
+{
+    "success": true,
+    "message": "products fetched successfully",
+    "data": {
+        "content": [
+            {
+                "brand": "Chic Cosmetics",
+                "category": "beauty",
+                "id": 5,
+                "merchantId": 2,
+                "price": 12.99,
+                "productStatus": "APPROVED",
+                "rating": 4.36,
+                "stock": 85,
+                "tags": [
+                    "beauty",
+                    "lipstick"
+                ],
+                "thumbnail": "https://cdn.dummyjson.com/product-images/beauty/red-lipstick/thumbnail.webp",
+                "title": "Red Lipstick"
+            },
+            {
+                "brand": "Calvin Klein",
+                "category": "fragrances",
+                "id": 7,
+                "merchantId": 2,
+                "price": 49.99,
+                "productStatus": "APPROVED",
+                "rating": 4.37,
+                "stock": 29,
+                "tags": [
+                    "fragrances",
+                    "perfumes"
+                ],
+                "thumbnail": "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/thumbnail.webp",
+                "title": "Calvin Klein CK One"
+            },
+            {
+                "brand": "test brand",
+                "category": "beauty",
+                "id": 37,
+                "merchantId": 3,
+                "price": 599.0,
+                "productStatus": "APPROVED",
+                "rating": 4.8,
+                "stock": 10,
+                "tags": [
+                    "beauty"
+                ],
+                "thumbnail": "https://example.com/img.jpg",
+                "title": "voilet lipstick"
+            }
+        ],
+        "page": 1,
+        "size": 10,
+        "totalElements": 3,
+        "totalPages": 1
+    },
+    "httpStatus": 200
+}
+
+add products to cart
+POST: localhost:8081/api/customer/add-product/cart/37?size=M
+response
+{
+    "success": true,
+    "message": "product added to cart",
+    "data": {
+        "customerId": 3,
+        "id": 2,
+        "items": [
+            {
+                "id": 3,
+                "price": 599.0,
+                "product": {
+                    "brand": "test brand",
+                    "category": "beauty",
+                    "id": 37,
+                    "merchantId": 3,
+                    "price": 599.0,
+                    "productStatus": "APPROVED",
+                    "rating": 4.8,
+                    "stock": 8,
+                    "tags": [
+                        "beauty"
+                    ],
+                    "thumbnail": "https://example.com/img.jpg",
+                    "title": "voilet lipstick"
+                },
+                "quantity": 2,
+                "size": "M"
+            }
+        ],
+        "totalCartValue": 1198.0
+    },
+    "httpStatus": 200
+}
+
+buy the product from cart
+POST: localhost:8081/api/customer/cart/buy?address=Bangalore
+response
+{
+    "success": true,
+    "message": "order created successfully, please confirm the payment",
+    "data": {
+        "name": "yggro304",
+        "email": "kaithlynn.greenlaw@allfreemail.net",
+        "mobile": "9866543219",
+        "orderId": "order_ShGFHe7O8gOH6X",
+        "paymentId": null,
+        "key": "rzp_test_SBtja63fMZx3Fu",
+        "amount": 119800.0,
+        "currency": "INR",
+        "status": "PENDING",
+        "callBackUrl": "/customer/confirm-payment/2"
+    },
+    "httpStatus": 200
+}
+
+confirm the payment
+POST: localhost:8081/api/customer/payment/confirm/order_ShGFHe7O8gOH6X?razorpay_payment_id=pay_123
+response
+{
+    "success": true,
+    "message": "payment confirmed successfully",
+    "data": {
+        "name": "yggro304",
+        "email": "kaithlynn.greenlaw@allfreemail.net",
+        "mobile": "9866543219",
+        "orderId": "order_ShGFHe7O8gOH6X",
+        "paymentId": "pay_123",
+        "key": "rzp_test_SBtja63fMZx3Fu",
+        "amount": 1198.0,
+        "currency": "INR",
+        "status": "SUCCESS",
+        "callBackUrl": "/customer/confirm-payment/2"
+    },
+    "httpStatus": 200
+}
+
+if payment is success mail will be sent to customer
+
+view the order
+GET: localhost:8081/api/customer/orders
+response
+{
+    "success": true,
+    "message": "orders fetched successfully",
+    "data": [
+        {
+            "address": "Bangalore",
+            "amount": 1198.0,
+            "id": 2,
+            "items": null,
+            "orderId": "order_ShGFHe7O8gOH6X",
+            "paymentId": "pay_123",
+            "paymentStatus": "SUCCESS"
+        }
+    ],
+    "httpStatus": 200
+}
+
